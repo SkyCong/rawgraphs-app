@@ -206,7 +206,7 @@ const ChartOptions = ({
   const optionsConfig = useMemo(() => {
     return getOptionsConfig(chart?.visualOptions)
   }, [chart])
-  const { t } = useI18n()
+  const { t, tl } = useI18n()
 
   const [collapseStatus, setCollapseStatus] = useState(() => {
     const groups = {}
@@ -276,7 +276,7 @@ const ChartOptions = ({
               <Col
                 className={`d-flex justify-content-between align-items-center ${styles['group-header']}`}
               >
-                <h5 className="text-uppercase m-0">{groupName === 'artboard' ? t('chartOptions.artboard') : groupName}</h5>
+                <h5 className="text-uppercase m-0">{groupName === 'artboard' ? t('chartOptions.artboard') : tl(groupName)}</h5>
                 <span
                   className={[styles['collapse-button'], 'cursor-pointer'].join(
                     ' '
@@ -306,6 +306,7 @@ const ChartOptions = ({
                     key={optionId + repeatIndex}
                     repeatIndex={repeatIndex}
                     {...def}
+                    label={tl(def.label)}
                     optionId={optionId}
                     error={error?.errors?.[optionId + repeatIndex]}
                     value={
@@ -339,6 +340,7 @@ const ChartOptions = ({
                   className={styles['chart-option']}
                   key={optionId}
                   {...def}
+                  label={tl(def.label)}
                   optionId={optionId}
                   error={error?.errors?.[optionId]}
                   value={visualOptions?.[optionId]}

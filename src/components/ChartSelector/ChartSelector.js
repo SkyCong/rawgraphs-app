@@ -20,7 +20,7 @@ function ChartSelector({
   onRemoveCustomChart,
   onAddChartClick,
 }) {
-  const { t } = useI18n()
+  const { t, tl } = useI18n()
   const [filter, setFilter] = useState('__all__')
 
   const charts = useMemo(() => {
@@ -45,7 +45,7 @@ function ChartSelector({
           {t('chartSelector.show')}
           <Dropdown className="d-inline-block ml-2 raw-dropdown">
             <Dropdown.Toggle variant="white" className="pr-5">
-              {filter === '__all__' ? t('chartSelector.allCharts') : (filter.charAt(0).toUpperCase() + filter.slice(1))}
+              {filter === '__all__' ? t('chartSelector.allCharts') : tl(filter.charAt(0).toUpperCase() + filter.slice(1))}
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item
@@ -59,7 +59,7 @@ function ChartSelector({
               ).map((d) => {
                 return (
                   <Dropdown.Item key={d} onClick={() => handleFilterChange(d)}>
-                    {d.charAt(0).toUpperCase() + d.slice(1)}
+                    {tl(d.charAt(0).toUpperCase() + d.slice(1))}
                   </Dropdown.Item>
                 )
               })}
@@ -74,12 +74,12 @@ function ChartSelector({
               <Card.Img variant="top" src={currentChart.metadata.thumbnail} />
               <Card.Body>
                 <Card.Title className="m-0">
-                  <h2 className="m-0">{currentChart.metadata.name}</h2>
+                  <h2 className="m-0">{tl(currentChart.metadata.name)}</h2>
                 </Card.Title>
                 <Card.Subtitle className="m-0">
-                  <h4 className="mb-2">{currentChart.metadata.category}</h4>
+                  <h4 className="mb-2">{tl(currentChart.metadata.category)}</h4>
                 </Card.Subtitle>
-                <Card.Text>{currentChart.metadata.description}</Card.Text>
+                <Card.Text>{tl(currentChart.metadata.description)}</Card.Text>
                 <Card.Link
                   className={classNames({
                     [styles.disabled]: !currentChart.metadata.code,
@@ -125,7 +125,7 @@ function ChartSelector({
                     <Card.Body className="w-75 px-2 py-3">
                       <Card.Title className="m-0">
                         <h2 className="m-0" style={{ whiteSpace: 'nowrap' }}>
-                          {d.metadata.name}
+                          {tl(d.metadata.name)}
                         </h2>
                         {d.rawCustomChart && (
                           <div>
@@ -160,10 +160,8 @@ function ChartSelector({
                       <Card.Subtitle className="m-0">
                         <h4 className="m-0">
                           {d.metadata.categories
-                            .join(', ')
-                            .charAt(0)
-                            .toUpperCase() +
-                            d.metadata.categories.join(', ').slice(1)}
+                            .map((c) => tl(c.charAt(0).toUpperCase() + c.slice(1)))
+                            .join(', ')}
                         </h4>
                       </Card.Subtitle>
                     </Card.Body>
