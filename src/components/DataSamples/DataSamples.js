@@ -1,6 +1,6 @@
 import React from 'react'
 import { Row, Col, Card } from 'react-bootstrap'
-import styles from './DataSamples.module.scss'
+import { useI18n } from '../../i18n/I18nContext'
 
 const samplesList = [
   {
@@ -252,13 +252,14 @@ const samplesList = [
   // },
 ]
 export default function DataSamples({ onSampleReady, setLoadingError }) {
+  const { t } = useI18n()
   const select = async (sample) => {
     const { delimiter, url } = sample
     let response
     try {
       response = await fetch(url)
     } catch (e) {
-      setLoadingError('Loading error. ' + e.message)
+      setLoadingError(t('dataLoader.loadError') + e.message)
       return
     }
     const text = await response.text()
@@ -285,12 +286,6 @@ export default function DataSamples({ onSampleReady, setLoadingError }) {
                     <h4 className="m-0">{d.category}</h4>
                   </Card.Title>
                 </Card.Body>
-                <a
-                  href={d.sourceURL}
-                  className={[styles['dataset-source']].join(' ')}
-                >
-                  Source: {d.sourceName}
-                </a>
               </Card>
             </Col>
           )

@@ -1,10 +1,13 @@
+import React from 'react'
 import { Modal, Button } from 'react-bootstrap'
+import { useI18n } from '../../i18n/I18nContext'
 
 export default function CustomChartWarnModal({
   toConfirmCustomChart,
   abortCustomChartLoad,
   confirmCustomChartLoad,
 }) {
+  const { t } = useI18n()
   return (
     <Modal
       show={toConfirmCustomChart !== null}
@@ -16,13 +19,12 @@ export default function CustomChartWarnModal({
       contentClassName='border'
     >
       <Modal.Header closeButton>
-        <Modal.Title>Warning!</Modal.Title>
+        <Modal.Title>{t('customChartWarn.title')}</Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <p>
-          You are about to execute third party JavaScript continue at your own
-          risk.
+          {t('customChartWarn.body')}
         </p>
         {toConfirmCustomChart && toConfirmCustomChart.type === 'project' && (
           <div
@@ -46,7 +48,7 @@ export default function CustomChartWarnModal({
             abortCustomChartLoad()
           }}
         >
-          Don't execute
+          {t('customChartWarn.dontExecute')}
         </Button>
         <Button
           variant="primary"
@@ -54,7 +56,7 @@ export default function CustomChartWarnModal({
             confirmCustomChartLoad()
           }}
         >
-          Continue
+          {t('customChartWarn.continue')}
         </Button>
       </Modal.Footer>
     </Modal>

@@ -16,6 +16,7 @@ import get from 'lodash/get'
 import map from 'lodash/map'
 import styles from './ChartOptions.module.scss'
 import omit from 'lodash/omit'
+import { useI18n } from '../../i18n/I18nContext'
 
 const CHART_OPTION_COMPONENTS = {
   number: ChartOptionNumber,
@@ -205,6 +206,7 @@ const ChartOptions = ({
   const optionsConfig = useMemo(() => {
     return getOptionsConfig(chart?.visualOptions)
   }, [chart])
+  const { t } = useI18n()
 
   const [collapseStatus, setCollapseStatus] = useState(() => {
     const groups = {}
@@ -274,7 +276,7 @@ const ChartOptions = ({
               <Col
                 className={`d-flex justify-content-between align-items-center ${styles['group-header']}`}
               >
-                <h5 className="text-uppercase m-0">{groupName}</h5>
+                <h5 className="text-uppercase m-0">{groupName === 'artboard' ? t('chartOptions.artboard') : groupName}</h5>
                 <span
                   className={[styles['collapse-button'], 'cursor-pointer'].join(
                     ' '
@@ -355,8 +357,7 @@ const ChartOptions = ({
             })}
             {groupName === 'artboard' && visualOptions.showLegend && (
               <p className="small">
-                The final output will be {containerOptions?.width}px *{' '}
-                {containerOptions?.height}px including the legend.
+                {t('chartOptions.legendHint', { width: containerOptions?.width, height: containerOptions?.height })}
               </p>
             )}
           </div>

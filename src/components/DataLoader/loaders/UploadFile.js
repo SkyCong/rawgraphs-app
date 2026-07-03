@@ -3,11 +3,13 @@ import { Button } from 'react-bootstrap'
 import { useDropzone } from 'react-dropzone'
 import classNames from 'classnames'
 import S from './UploadFile.module.scss'
+import { useI18n } from '../../../i18n/I18nContext'
 
 export default function UploadFile({
   setUserInput,
   setLoadingError,
 }) {
+  const { t } = useI18n()
   const onDrop = useCallback(
     (acceptedFiles) => {
       const reader = new FileReader()
@@ -41,13 +43,14 @@ export default function UploadFile({
       {...getRootProps()}
     >
       <input {...getInputProps()} />
-      <span>Drag a file here or </span>
-      <Button className={S['browse-button']} color="primary">
-        Browse
-      </Button>
-      <span>a file from your computer</span>
-      {isDragAccept && <p>All files will be accepted</p>}
-      {isDragReject && <p>Some files will be rejected</p>}
+      <span>将文件拖到此处或{' '}
+        <Button className={S['browse-button']} color="primary">
+          {t('common.browse')}
+        </Button>
+        {' '}从本机选择文件
+      </span>
+      {isDragAccept && <p>{t('dataLoader.allAccepted')}</p>}
+      {isDragReject && <p>{t('dataLoader.someRejected')}</p>}
     </div>
   )
 }

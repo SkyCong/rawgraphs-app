@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { InputGroup, DropdownButton, Dropdown } from 'react-bootstrap'
 import { onChartExported } from '../../gaEvents'
+import { useI18n } from '../../i18n/I18nContext'
 
 function downloadBlob(url, filename) {
   // Create a new anchor element
@@ -12,6 +13,7 @@ function downloadBlob(url, filename) {
 }
 
 export default function Exporter({ rawViz, exportProject }) {
+  const { t } = useI18n()
   const downloadSvg = useCallback(
     (filename) => {
       var svgString = new XMLSerializer().serializeToString(
@@ -128,7 +130,7 @@ export default function Exporter({ rawViz, exportProject }) {
           className="btn btn-primary btn-block raw-btn"
           onClick={downloadViz}
         >
-          Download
+          {t('common.download')}
         </button>
       </div>
     </div>

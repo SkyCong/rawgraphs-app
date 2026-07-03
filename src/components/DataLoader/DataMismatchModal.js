@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Modal, Button } from 'react-bootstrap'
+import { useI18n } from '../../i18n/I18nContext'
 
 function DataMismatchModal({
   replaceRequiresConfirmation,
@@ -7,6 +8,7 @@ function DataMismatchModal({
   cancelDataReplace,
 }) {
   const [showModal, setShowModal] = useState(true)
+  const { t } = useI18n()
 
   const handleClose = () => {
     setShowModal(false)
@@ -24,52 +26,29 @@ function DataMismatchModal({
     >
       <Modal.Header>
         <Modal.Title as="h5">
-          Warning:{' '}
-          {replaceRequiresConfirmation === 'parse-error' && <>parsing error</>}
-          {replaceRequiresConfirmation.startsWith('missing-column:') && (
-            <>missing column</>
-          )}
-          {replaceRequiresConfirmation === 'type-mismatch' && (
-            <>data-type mismatch</>
-          )}
+          {t('dataMismatch.title')}
         </Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         {replaceRequiresConfirmation === 'parse-error' && (
           <>
-            <p>There was an error while parsing new data.</p>
-            <p>
-              You can load the new data and try to fix the error or return to
-              the data previously loaded.
-            </p>
+            <p>{t('dataMismatch.errorParsing')}</p>
+            <p>{t('dataMismatch.errorHint')}</p>
           </>
         )}
         {replaceRequiresConfirmation.startsWith('missing-column:') && (
           <>
             <p>
-              The data mapping of this project requires the dimension{' '}
-              <span className="font-weight-bold">
-                {replaceRequiresConfirmation.split(':')[1]}
-              </span>
-              , that we can't find in the new data.
+              {t('dataMismatch.missingDimension', { dim: replaceRequiresConfirmation.split(':')[1] })}
             </p>
-            <p>
-              You can create a new data mapping with the new data or return to
-              the data previously loaded.
-            </p>
+            <p>{t('dataMismatch.errorHint')}</p>
           </>
         )}
         {replaceRequiresConfirmation === 'type-mismatch' && (
           <>
-            <p>
-              The data-types previously set for this project can't be applied to
-              the new data.
-            </p>
-            <p>
-              You can use the new data and re-set data-types or return to the
-              data previously loaded.
-            </p>
+            <p>{t('dataMismatch.typeMismatch')}</p>
+            <p>{t('dataMismatch.errorHint')}</p>
           </>
         )}
       </Modal.Body>
@@ -80,7 +59,7 @@ function DataMismatchModal({
             commitDataReplace()
           }}
         >
-          Load new data
+          {t('dataMismatch.loadNewData')}
         </Button>
         <Button
           variant="secondary"
@@ -88,7 +67,7 @@ function DataMismatchModal({
             cancelDataReplace()
           }}
         >
-          Cancel
+          {t('common.cancel')}
         </Button>
       </Modal.Footer>
     </Modal>

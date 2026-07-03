@@ -27,6 +27,7 @@ import DataMismatchModal from './DataMismatchModal'
 import SparqlFetch from './loaders/SparqlFetch'
 import { tsvFormat } from 'd3-dsv'
 import { CopyToClipboardButton } from '../CopyToClipboardButton'
+import { useI18n } from '../../i18n/I18nContext'
 
 function DataLoader({
   userInput,
@@ -62,11 +63,12 @@ function DataLoader({
 }) {
   const [loadingError, setLoadingError] = useState()
   const [initialOptionState, setInitialOptionState] = useState(null)
+  const { t } = useI18n()
 
   const options = [
     {
       id: 'paste',
-      name: 'Paste your data',
+      name: t('dataLoader.paste'),
       loader: (
         <Paste
           userInput={userInput}
@@ -74,14 +76,13 @@ function DataLoader({
           setLoadingError={setLoadingError}
         />
       ),
-      message:
-        'Copy and paste your data from other applications or websites. You can use tabular (TSV, CSV, DSV) or JSON data.',
+      message: t('dataLoader.pasteHint'),
       icon: BsClipboard,
       allowedForReplace: true,
     },
     {
       id: 'upload',
-      name: 'Upload your data',
+      name: t('dataLoader.upload'),
       loader: (
         <UploadFile
           userInput={userInput}
@@ -91,13 +92,13 @@ function DataLoader({
           setLoadingError={setLoadingError}
         />
       ),
-      message: 'You can load tabular (TSV, CSV, DSV) or JSON data.',
+      message: t('dataLoader.uploadHint'),
       icon: BsUpload,
       allowedForReplace: true,
     },
     {
       id: 'sample',
-      name: 'Try our data samples',
+      name: t('dataLoader.samples'),
       message: '',
       loader: (
         <DataSamples
@@ -110,8 +111,8 @@ function DataLoader({
     },
     {
       id: 'sparql',
-      name: 'SPARQL query',
-      message: 'Load data with a SparQL query',
+      name: t('dataLoader.sparql'),
+      message: t('dataLoader.sparqlHint'),
       loader: (
         <SparqlFetch
           userInput={userInput}
@@ -128,9 +129,8 @@ function DataLoader({
     },
     {
       id: 'url',
-      name: 'From URL',
-      message:
-        'Enter a web address (URL) pointing to the data (e.g. a public Dropbox file, a public API, ...). Please, be sure the server is CORS-enabled.',
+      name: t('dataLoader.url'),
+      message: t('dataLoader.urlHint'),
       loader: (
         <UrlFetch
           userInput={userInput}
@@ -147,8 +147,8 @@ function DataLoader({
     },
     {
       id: 'project',
-      name: 'Open your project',
-      message: 'Load a .rawgraphs project.',
+      name: t('dataLoader.project'),
+      message: t('dataLoader.projectHint'),
       loader: (
         <LoadProject
           onProjectSelected={hydrateFromProject}
@@ -212,30 +212,23 @@ function DataLoader({
     const column = Object.keys(errors[0].error)[0]
     return (
       <span>
-        Ops, please check <span className="font-weight-bold">row {row}</span> at
-        column <span className="font-weight-bold">{column}</span>.{' '}
+        {t('dataLoader.parseError', { row, column })}{' '}
         {errors.length === 2 && (
           <>
             {' '}
-            There's another issue at row{' '}
+            {t('dataLoader.anotherIssue')}{' '}
             <span className="font-weight-bold">{errors[1].row + 1}</span>.{' '}
           </>
         )}
         {errors.length > 2 && (
           <>
             {' '}
-            There are issues in{' '}
-            <span className="font-weight-bold">{errors.length - 1}</span> more
-            rows.{' '}
+            {errors.length - 1}{' '}
           </>
         )}
         {successRows > 0 && (
           <>
-            The remaining{' '}
-            <span className="font-weight-bold">
-              {successRows} row{successRows > 1 && <>s</>}
-            </span>{' '}
-            look{successRows === 1 && <>s</>} fine.
+            {t('dataLoader.remainingRows', { n: successRows })}
           </>
         )}
       </span>
@@ -304,7 +297,7 @@ function DataLoader({
                   onClick={reloadRAW}
                 >
                   <BsArrowRepeat className="mr-2" />
-                  <h4 className="m-0 d-inline-block">{'Reset'}</h4>
+                  <h4 className="m-0 d-inline-block">{t('common.reset')}</h4>
                 </div>
 
                 <div
@@ -313,7 +306,7 @@ function DataLoader({
                     cancelDataReplace()
                   }}
                 >
-                  <h4 className="m-0 d-inline-block">{'Cancel'}</h4>
+                  <h4 className="m-0 d-inline-block">{t('common.cancel')}</h4>
                 </div>
               </>
             )}
@@ -349,7 +342,7 @@ function DataLoader({
               onClick={reloadRAW}
             >
               <BsArrowRepeat className="mr-2" />
-              <h4 className="m-0 d-inline-block">{'Reset'}</h4>
+              <h4 className="m-0 d-inline-block">{t('common.reset')}</h4>
             </div>
 
             <div
@@ -364,7 +357,7 @@ function DataLoader({
               }}
             >
               <BsArrowCounterclockwise className="mr-2" />
-              <h4 className="m-0 d-inline-block">{'Change data'}</h4>
+              <h4 className="m-0 d-inline-block">{t('common.changeData')}</h4>
             </div>
           </Col>
         )}
@@ -378,13 +371,10 @@ function DataLoader({
                   variant="success"
                   message={
                     <span>
-                      <span className="font-weight-bold">
-                        {data.dataset.length} rows
-                      </span>{' '}
-                      (
-                      {data.dataset.length * Object.keys(data.dataTypes).length}{' '}
-                      cells) have been successfully parsed, now you can choose a
-                      chart!
+                      {t('dataLoader.parseSuccess', {
+                        n: data.dataset.length,
+                        m: data.dataset.length * Object.keys(data.dataTypes).length,
+                      })}
                     </span>
                   }
                   action={copyToClipboardButton}

@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import { Dropdown } from 'react-bootstrap'
+import { useI18n } from '../../i18n/I18nContext'
 
 export default function StackSelector({
   title,
@@ -8,6 +9,7 @@ export default function StackSelector({
   onChange,
   ...props
 }) {
+  const { t } = useI18n()
   const handleChange = useCallback(
     (nextDimension) => {
       if (onChange) {
@@ -26,12 +28,12 @@ export default function StackSelector({
           className="truncate-160px"
           disabled={list.length === 0}
         >
-          {value ? value : 'Column'}
+          {value ? value : t('parsingOptions.column')}
         </Dropdown.Toggle>
         <Dropdown.Menu>
           {value && (
             <Dropdown.Item onSelect={() => handleChange(null)}>
-              {'Do not stack'}
+              {t('parsingOptions.doNotStack')}
             </Dropdown.Item>
           )}
           {Object.keys(list).map((d) => {

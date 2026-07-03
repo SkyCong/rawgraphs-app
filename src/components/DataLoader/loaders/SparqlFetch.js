@@ -6,6 +6,7 @@ import SimpleClient from 'sparql-http-client/SimpleClient'
 import { Generator } from 'sparqljs'
 import '@rdfjs-elements/sparql-editor/sparql-editor.js'
 import { SparqlMarker } from '../../../hooks/useDataLoaderUtils/parser'
+import { useI18n } from '../../../i18n/I18nContext'
 
 const DEFAULT_PREFIXES = {
   wd: 'http://www.wikidata.org/entity/',
@@ -61,6 +62,7 @@ export default function SparqlFetch({
 }) {
   const [url, setUrl] = useState(initialState?.url ?? 'https://query.wikidata.org/sparql')
   const [parsedQuery, setParsedQuery] = useState(null)
+  const { t } = useI18n()
 
   const editorDomRef = useRef()
 
@@ -103,7 +105,7 @@ export default function SparqlFetch({
       })
       .catch((err) => {
         setLoadingError(
-          'It was not possible to execute the query on the given endpoint'
+          t('dataLoader.sparqlError')
         )
       })
   }, [parsedQuery, setLoadingError, setUserInput, url])
@@ -125,7 +127,7 @@ export default function SparqlFetch({
   return (
     <>
       <div className={classNames(S['base-iri-input-here'])}>
-        <span>Write your SPARQL Endpoint here</span>
+        <span>{t('dataLoader.endpointPlaceholder')}</span>
       </div>
       <input
         className={classNames('w-100', S['url-input'])}
@@ -135,7 +137,7 @@ export default function SparqlFetch({
         }}
       />
       <div className={classNames(S['query-input-here'])}>
-        <span>Write your query here</span>
+        <span>{t('dataLoader.queryPlaceholder')}</span>
       </div>
       <div ref={editorDomRef} />
       <div className="text-right">
@@ -144,7 +146,7 @@ export default function SparqlFetch({
           disabled={!parsedQuery || !url}
           onClick={onSubmit}
         >
-          Run query
+          {t('common.run')}
         </button>
       </div>
     </>

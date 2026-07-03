@@ -5,9 +5,10 @@ import { BsLink, BsPlus } from 'react-icons/bs'
 import uniq from 'lodash/uniq'
 import styles from './ChartSelector.module.scss'
 import { BsFillTrashFill } from 'react-icons/bs'
+import { useI18n } from '../../i18n/I18nContext'
 
 function filterCharts(charts, filter) {
-  return filter === 'All charts'
+  return filter === '__all__'
     ? charts
     : charts.filter((d) => d.metadata.categories.indexOf(filter) !== -1)
 }
@@ -19,7 +20,8 @@ function ChartSelector({
   onRemoveCustomChart,
   onAddChartClick,
 }) {
-  const [filter, setFilter] = useState('All charts')
+  const { t } = useI18n()
+  const [filter, setFilter] = useState('__all__')
 
   const charts = useMemo(() => {
     return filterCharts(availableCharts, filter)
@@ -40,17 +42,17 @@ function ChartSelector({
     <>
       <Row>
         <Col className="text-right">
-          Show
+          {t('chartSelector.show')}
           <Dropdown className="d-inline-block ml-2 raw-dropdown">
             <Dropdown.Toggle variant="white" className="pr-5">
-              {filter.charAt(0).toUpperCase() + filter.slice(1)}
+              {filter === '__all__' ? t('chartSelector.allCharts') : (filter.charAt(0).toUpperCase() + filter.slice(1))}
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item
-                key={'All charts'}
-                onClick={() => handleFilterChange('All charts')}
+                key={'__all__'}
+                onClick={() => handleFilterChange('__all__')}
               >
-                All charts
+                {t('chartSelector.allCharts')}
               </Dropdown.Item>
               {uniq(
                 availableCharts.map((d) => d.metadata.categories).flat()
@@ -86,7 +88,7 @@ function ChartSelector({
                   href={currentChart.metadata.code}
                   target="_blank"
                 >
-                  <BsLink color="black" /> Code
+                  <BsLink color="black" /> {t('chartSelector.code')}
                 </Card.Link>
                 <Card.Link
                   className={classNames({
@@ -96,7 +98,7 @@ function ChartSelector({
                   href={currentChart.metadata.tutorial}
                   target="_blank"
                 >
-                  <BsLink color="black" /> Tutorial
+                  <BsLink color="black" /> {t('chartSelector.tutorial')}
                 </Card.Link>
               </Card.Body>
             </Card>
@@ -182,7 +184,7 @@ function ChartSelector({
                 <Card.Body className="w-75 px-2 py-3">
                   <Card.Title className="m-0">
                     <h2 className="m-0" style={{ whiteSpace: 'nowrap' }}>
-                      Load custom chart
+                      {t('chartSelector.loadCustom')}
                     </h2>
                   </Card.Title>
                 </Card.Body>

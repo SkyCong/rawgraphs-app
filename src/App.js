@@ -7,8 +7,8 @@ import {
 import HeaderItems from './HeaderItems'
 import Header from './components/Header'
 import Section from './components/Section'
-import Footer from './components/Footer'
 import ScreenSizeAlert from './components/ScreenSizeAlert'
+import { I18nProvider, useI18n } from './i18n/I18nContext'
 import DataLoader from './components/DataLoader'
 import ChartSelector from './components/ChartSelector'
 import DataMapping from './components/DataMapping'
@@ -22,13 +22,11 @@ import baseCharts from './charts'
 import useSafeCustomCharts from './hooks/useSafeCustomCharts'
 import useDataLoader from './hooks/useDataLoader'
 import isPlainObject from 'lodash/isPlainObject'
-import CookieConsent from 'react-cookie-consent'
 import CustomChartLoader from './components/CustomChartLoader'
 import CustomChartWarnModal from './components/CustomChartWarnModal'
 
-// #TODO: i18n
-
-function App() {
+function AppInner() {
+  const { t } = useI18n()
   const [
     customCharts,
     {
@@ -266,11 +264,11 @@ function App() {
         abortCustomChartLoad={abortCustomChartLoad}
       />
       <div className="app-sections">
-        <Section title={`1. Load your data`} loading={loading}>
+        <Section title={t('steps.load')} loading={loading}>
           <DataLoader {...dataLoader} hydrateFromProject={importProject} />
         </Section>
         {data && (
-          <Section title="2. Choose a chart">
+          <Section title={t('steps.chart')}>
             <CustomChartLoader
               isOpen={isModalCustomChartOpen}
               onClose={toggleModalCustomChart}
@@ -288,7 +286,7 @@ function App() {
           </Section>
         )}
         {data && currentChart && (
-          <Section title={`3. Mapping`} loading={mappingLoading}>
+          <Section title={t('steps.mapping')} loading={mappingLoading}>
             <DataMapping
               ref={dataMappingRef}
               dimensions={currentChart.dimensions}
@@ -299,7 +297,7 @@ function App() {
           </Section>
         )}
         {data && currentChart && (
-          <Section title="4. Customize">
+          <Section title={t('steps.customize')}>
             <ChartPreviewWithOptions
               chart={currentChart}
               dataset={data.dataset}
@@ -313,39 +311,21 @@ function App() {
           </Section>
         )}
         {data && currentChart && rawViz && (
-          <Section title="5. Export">
+          <Section title={t('steps.export')}>
             <Exporter rawViz={rawViz} exportProject={exportProject} />
           </Section>
         )}
-        <Footer />
-        <CookieConsent
-          location="bottom"
-          buttonText="Got it!"
-          style={{ background: '#f5f5f5', color: '#646467' }}
-          buttonStyle={{
-            background: '#646467',
-            color: 'white',
-            fontSize: '13px',
-            borderRadius: '3px',
-            padding: '5px 20px',
-          }}
-          buttonClasses="btn btn-default btn-grey"
-          acceptOnScroll={true}
-        >
-          This website uses Google Analytics to anonymously collect browsing
-          data.{' '}
-          <a
-            href="https://rawgraphs.io/privacy/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-2 text-body border-bottom border-dark"
-          >
-            Learn More
-          </a>
-        </CookieConsent>
       </div>
       <ScreenSizeAlert />
     </div>
+  )
+}
+
+function App() {
+  return (
+    <I18nProvider>
+      <AppInner />
+    </I18nProvider>
   )
 }
 

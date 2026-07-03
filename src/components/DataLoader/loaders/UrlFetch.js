@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import classNames from 'classnames'
 import S from './UrlFetch.module.scss'
+import { useI18n } from '../../../i18n/I18nContext'
 
 export async function fetchData(source) {
   const response = await fetch(source.url)
@@ -15,6 +16,7 @@ export default function UrlFetch({
   initialState = null,
 }) {
   const [url, setUrl] = useState(initialState?.url)
+  const { t } = useI18n()
 
   const fetchUrl = useCallback(
     async (url) => {
@@ -25,7 +27,7 @@ export default function UrlFetch({
         setUserInput(data, source)
         setLoadingError(null)
       } catch (e) {
-        setLoadingError('Loading error. ' + e.message)
+        setLoadingError(t('dataLoader.loadError') + e.message)
       }
     },
     [setLoadingError, setUserInput]
@@ -56,7 +58,7 @@ export default function UrlFetch({
           disabled={!url}
           type="submit"
         >
-          Load data
+          {t('common.load')}
         </button>
       </div>
     </form>

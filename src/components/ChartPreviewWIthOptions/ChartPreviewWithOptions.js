@@ -5,6 +5,7 @@ import ChartPreview from '../ChartPreview'
 import { chart as rawChart } from '@rawgraphs/rawgraphs-core'
 import { mapDataInWorker } from '../../worker'
 import { WEBWORKER_ACTIVE } from '../../constants'
+import { useI18n } from '../../i18n/I18nContext'
 
 const ChartPreviewWithOptions = ({
   chart,
@@ -16,7 +17,8 @@ const ChartPreviewWithOptions = ({
   setRawViz,
   setMappingLoading,
 }) => {
-  const [error, setError] = useState({variant: "secondary", message: "Required chart variables"})
+  const { t } = useI18n()
+  const [error, setError] = useState({variant: "secondary", message: t('chartPreview.requiredVars')})
   const [mappedData, setMappedData] = useState(null)
 
   useEffect(() => {
